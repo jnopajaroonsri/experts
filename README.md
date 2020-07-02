@@ -1,24 +1,22 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This project is a simple experts directory that incorporates the following:
 
-Things you may want to cover:
+member creation via name, personal address
 
-* Ruby version
+member profile generated via parsing of their personal address for h1 to h3 tags
 
-* System dependencies
+shortened website generation using bitly
 
-* Configuration
+friendship linking with other existing members.  friendships are bi-directional.
 
-* Database creation
+member profile searching which displays shortest path within network
 
-* Database initialization
+things not done:
+friendship relationship cleanup if a friend is removed, it's inverse relationship also should be cleaned up
+unit tests
 
-* How to run the test suite
+dummy data generation is available via rake tasks:
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+populate_db:new_task  to generate 50 users
+populate_db:create_friendships  to generate 4 friendships per user
