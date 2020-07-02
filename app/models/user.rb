@@ -7,7 +7,7 @@ class User < ApplicationRecord
 
     def query_profiles(text)
         # safe from sql injection
-        users = User.where('UPPER(profile) like ?', "%#{text.upcase}%").pluck(:id, :profile).uniq
+        users = User.where('UPPER(profile) like ?', "%#{text.upcase}%").pluck(:id, :profile)
         results = []
         users.each do |user_id, match|
             next if user_id == self.id
@@ -40,11 +40,11 @@ class User < ApplicationRecord
         # let's start by processing the smaller list for friends, first
         # we want to get the friends of the friends in the friendlist and then check for common friends with the other list
         if source_friends.length > dest_friends.length
-            new_dest_friends = Friendship.where(user_id: dest_friends).pluck(:friend_id).uniq.sort
+            new_dest_friends = Friendship.where(user_id: dest_friends).distinct.pluck(:friend_id).sort
             dest_friends = new_dest_friends.difference(dest_traversal.flatten)
             dest_traversal.push(dest_friends) unless dest_friends.empty?
         else
-            new_source_friends = Friendship.where(user_id: source_friends).pluck(:friend_id).uniq.sort
+            new_source_friends = Friendship.where(user_id: source_friends).distinct.pluck(:friend_id).sort
             source_friends = new_source_friends.difference(source_traversal.flatten)
             source_traversal.push(source_friends) unless source_friends.empty?
         end
@@ -54,7 +54,7 @@ class User < ApplicationRecord
         return if dest_friends.empty? || source_friends.empty? 
 
         # check if we have any mutual friends
-        common_friends = (dest_friends & source_friends).uniq.sort
+        common_friends = (dest_friends & source_friends).sort
 
         unless common_friends.empty?
             common_friend = common_friends.first
